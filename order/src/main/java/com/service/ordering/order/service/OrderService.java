@@ -22,7 +22,9 @@ public class OrderService {
         * else return Exception -INVALIDUserException */
 
 
-        /* Step 2-> Fetch List of Products and their quantity from WishList Service ,  */
+        /* Step 2-> Fetch List of Products and their quantity from WishList Service , Call the wishList by giving
+        * the cartId and catch the List<Items> itemsList which contains productId , Quantity */
+
 
         /* Step 3-> Check the Product availability from Inventory Service by providing ProductId and product
         * Quantity.  */
