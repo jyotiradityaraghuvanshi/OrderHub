@@ -17,7 +17,10 @@ public class OrderController {
 
     @PostMapping("/create")
     public ResponseEntity<Boolean> createOrder(@RequestBody OrderRequestDto orderRequestDto){
-        return new ResponseEntity<>(orderService.createOrdering(orderRequestDto) , HttpStatus.CREATED);
+        Boolean success = orderService.createOrdering(orderRequestDto);
+        if(success) return new ResponseEntity<>(true, HttpStatus.CREATED);
+        else return new ResponseEntity<>(false, HttpStatus.EXPECTATION_FAILED);
+
     }
 
 
