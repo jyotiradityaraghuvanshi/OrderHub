@@ -1,4 +1,4 @@
-package com.service.ordering.order.Enum;
+package com.service.ordering.orders.Enum;
 
 
 public enum Status {

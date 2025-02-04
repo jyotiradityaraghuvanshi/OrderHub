@@ -1,8 +1,8 @@
-package com.service.ordering.order.controller;
+package com.service.ordering.orders.controller;
 
 
-import com.service.ordering.order.dto.RequestDto.OrderRequestDto;
-import com.service.ordering.order.service.OrderService;
+import com.service.ordering.orders.dto.RequestDto.OrderRequestDto;
+import com.service.ordering.orders.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
