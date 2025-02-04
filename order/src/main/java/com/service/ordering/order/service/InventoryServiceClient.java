@@ -16,7 +16,7 @@ public class InventoryServiceClient {
     private final RestTemplate restTemplate;
 
 
-    @Value("${wishlist.service.url}")
+    @Value("${inventory.service.url}")
     private String inventoryClientUrl;
 
 

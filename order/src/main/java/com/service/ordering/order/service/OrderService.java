@@ -24,19 +24,28 @@ public class OrderService {
     @Autowired
     private InventoryServiceClient inventoryServiceClient;
 
+    @Autowired
+    private IdentityServiceClient identityServiceClient;
+
     public Boolean createOrdering(OrderRequestDto orderRequestDto) {
 
         //Step 1-> First check user by the api with Identity team , whether the user is valid or not.
         /* get/UserValidation(orderRequestDto.getUserId()) , if the response is true then proceed further
         * else return Exception -INVALIDUserException */
 
+        Boolean isValid = identityServiceClient.checkUserValidation(orderRequestDto.getUserId());
+        if(!isValid){
+            // throw new Exception INVALIDUSEREXCEPTION("message");
+            return false;
+        }
+
 
 
         /* Step 2-> Fetch List of Products and their quantity from WishList Service , Call the wishList by giving
         * the cartId and catch the List<Items> itemsList which contains productId , Quantity */
 
+        // we'll use the try catch block here and in every other calls too.
         List<CartItemDto> itemDtoList = wishListServiceClient.fetchCartItems(orderRequestDto.getCartId());
-        // step 2 done
 
 
 
