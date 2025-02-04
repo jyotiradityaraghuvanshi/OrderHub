@@ -1,11 +1,14 @@
 package com.service.ordering.order.service;
 
 
+import com.service.ordering.order.dto.CartItemDto;
 import com.service.ordering.order.dto.RequestDto.OrderRequestDto;
 import com.service.ordering.order.repository.OrderRepo;
 import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @Builder
@@ -14,6 +17,12 @@ public class OrderService {
     @Autowired
     private OrderRepo orderRepo;
 
+    @Autowired
+    private WishListServiceClient wishListServiceClient;
+
+
+    @Autowired
+    private InventoryServiceClient inventoryServiceClient;
 
     public Boolean createOrdering(OrderRequestDto orderRequestDto) {
 
@@ -22,12 +31,30 @@ public class OrderService {
         * else return Exception -INVALIDUserException */
 
 
+
         /* Step 2-> Fetch List of Products and their quantity from WishList Service , Call the wishList by giving
         * the cartId and catch the List<Items> itemsList which contains productId , Quantity */
+
+        List<CartItemDto> itemDtoList = wishListServiceClient.fetchCartItems(orderRequestDto.getCartId());
+        // step 2 done
+
 
 
         /* Step 3-> Check the Product availability from Inventory Service by providing ProductId and product
         * Quantity.  */
+
+        for(CartItemDto items : itemDtoList){
+
+            if(!inventoryServiceClient.checkAvailability(items)){
+                // throw Exception !ProductNotAvailableException("message").
+                return false;
+            }
+
+        }
+
+
+
+
 
         /*Step 4 -> Get all the products prices from Pricing Service from their corresponding productId */
 
