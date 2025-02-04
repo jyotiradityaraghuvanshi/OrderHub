@@ -1,4 +1,4 @@
-package com.service.ordering.order.dto.RequestDto;
+package com.service.ordering.orders.dto.RequestDto;
 
 
 import lombok.AllArgsConstructor;
@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderRequestDto {
+    private int userId;
+    private int cartId;
 
-    Integer userId;
-
-    Integer cartId;
-
+    // Getters and Setters
 }
