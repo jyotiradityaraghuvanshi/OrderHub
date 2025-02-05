@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class WishListResponseDto {
+public class CartListResponseDto {
 
     public List<CartItemDto> cartItemDtoList;
 

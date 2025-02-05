@@ -2,7 +2,7 @@ package com.service.ordering.order.service;
 
 
 import com.service.ordering.order.dto.CartItemDto;
-import com.service.ordering.order.dto.ResponseDto.WishListResponseDto;
+import com.service.ordering.order.dto.ResponseDto.CartListResponseDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ public class CartListServiceClient {
 
     private final RestTemplate restTemplate;
 
-    @Value("${wishlist.service.url}")
+    @Value("${cartlist.service.url}")
     private String wishListServiceUrl; // Read URL from properties file
 
     //Constructor Injection
@@ -26,9 +26,9 @@ public class CartListServiceClient {
 
     public List<CartItemDto> fetchCartItems(Integer cartId){
 
-        String url = wishListServiceUrl + "/wishlist/" + cartId;
+        String url = wishListServiceUrl + "/cartlist/" + cartId; //
 
-        ResponseEntity<WishListResponseDto> response = restTemplate.getForEntity(url , WishListResponseDto.class);
+        ResponseEntity<CartListResponseDto> response = restTemplate.getForEntity(url , CartListResponseDto.class);
 
         return response.getBody().getCartItemDtoList();
     }

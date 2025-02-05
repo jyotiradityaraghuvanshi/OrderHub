@@ -4,10 +4,10 @@ package com.service.ordering.order.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class CartNotFoundException extends RuntimeException{
+@ResponseStatus(HttpStatus.UNAUTHORIZED)
+public class InvalidUserException extends RuntimeException {
 
-    public CartNotFoundException(String message){
+    public InvalidUserException(String message){
         super(message);
     }
 

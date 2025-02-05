@@ -20,13 +20,8 @@ public class OrderController {
     public ResponseEntity<OrderResponseDto> createOrder(@RequestBody OrderRequestDto orderRequestDto){
         OrderResponseDto systemResponse = orderService.createOrdering(orderRequestDto);
 
-        if(systemResponse != null){
-            return new ResponseEntity<>(systemResponse , HttpStatus.CREATED);
-        }
-        else {
-            OrderResponseDto emptyResponse = new OrderResponseDto();
-            return new ResponseEntity<>(emptyResponse , HttpStatus.BAD_REQUEST);
-        }
+        //Exception are handled globally no need to handle it and no need to use any try catch block.
+        return new ResponseEntity<>(systemResponse , HttpStatus.CREATED);
 
     }
 

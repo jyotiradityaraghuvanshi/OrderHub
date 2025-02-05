@@ -3,7 +3,6 @@ package com.service.ordering.order.service;
 
 import com.service.ordering.order.dto.CartItemDto;
 import com.service.ordering.order.dto.ResponseDto.InventoryResponseDto;
-import com.service.ordering.order.dto.ResponseDto.WishListResponseDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
@@ -30,12 +29,16 @@ public class InventoryServiceClient {
 
         // here: think how are we going to give the list of Items received from Cart to Inventory, because we cannot
         // pass the list directly in the URL.*/
-        String url = inventoryClientUrl + "/inventory/" ;
+        String url = inventoryClientUrl + "/inventory/check-stock" ;
 
-        ResponseEntity<InventoryResponseDto> response = restTemplate.getForEntity(url , InventoryResponseDto.class);
+        // handled the issue of sending the list of cartItems to Inventory
+        ResponseEntity<InventoryResponseDto> response = restTemplate.postForEntity(url , cartItemDto , InventoryResponseDto.class);
 
+        // test will be written by adarsh shekhar
         return response.getBody();
     }
+
+
 
 
 }

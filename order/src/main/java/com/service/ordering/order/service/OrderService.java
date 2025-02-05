@@ -7,6 +7,11 @@ import com.service.ordering.order.dto.RequestDto.OrderRequestDto;
 import com.service.ordering.order.dto.ResponseDto.IdentityResponseDto;
 import com.service.ordering.order.dto.ResponseDto.InventoryResponseDto;
 import com.service.ordering.order.dto.ResponseDto.OrderResponseDto;
+import com.service.ordering.order.entity.Order;
+import com.service.ordering.order.exception.CartEmptyException;
+import com.service.ordering.order.exception.InvalidUserException;
+import com.service.ordering.order.exception.InventoryServiceException;
+import com.service.ordering.order.exception.ProductOutOfStockException;
 import com.service.ordering.order.repository.OrderRepo;
 import lombok.Builder;
 import lombok.NonNull;
@@ -14,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Builder
@@ -32,71 +38,60 @@ public class OrderService {
     @Autowired
     private IdentityServiceClient identityServiceClient;
 
-    public OrderResponseDto createOrdering(@NonNull OrderRequestDto orderRequestDto) {
+    public OrderResponseDto createOrdering(@NonNull OrderRequestDto orderRequestDto){
 
         //Step 1-> First check user by the api with Identity team , whether the user is valid or not.
         /* get/UserValidation(orderRequestDto.getUserId()) , if the response is true then proceed further
-        * else return Exception -INVALIDUserException */
+         * else return Exception -INVALIDUserException */
 
         IdentityResponseDto user = identityServiceClient.checkUserValidation(orderRequestDto.getUserId());
         if(user.getEmail() == null){
-            // throw new Exception INVALID_USER_EXCEPTION("message");
-            return null;
+            throw new InvalidUserException("User Id" + orderRequestDto.getUserId() + "Is Invalid");
         }
 
 
 
         /* Step 2-> Fetch List of Products and their quantity from WishList Service , Call the wishList by giving
-        * the cartId and catch the List<Items> itemsList which contains productId , Quantity */
+         * the cartId and catch the List<Items> itemsList which contains productId , Quantity */
 
         // we'll use the try catch block here and in every other calls too.
         List<CartItemDto> cartItems = cartListServiceClient.fetchCartItems(orderRequestDto.getCartId());
 
         if(cartItems.isEmpty()){
-            // throw new Exception Empty_Cart_Exception("message");
+            throw new CartEmptyException("Cart is empty for Cart ID: " + orderRequestDto.getCartId());
 
-            return null;
         }
 
 
 
         /* Step 3-> Check the Product availability from Inventory Service by providing ProductId and product
-        * Quantity.  */
+         * Quantity.  */
 
         // we are not passing the single-single products, this time we are passing the whole list of products to Inventory.
         InventoryResponseDto inventoryItems = inventoryServiceClient.getItemsAvailability(cartItems);
 
         if(inventoryItems.getInventoryItemList().isEmpty()){
-            // throw new Exception InventoryServiceException("message").
-
-            return null;
+            throw new InventoryServiceException("Inventory Service Return Empty Stock");
         }
+
         // we are checking whether the inventory items list has enough stock for fulfilling the order or not
-        Boolean check = compareInventoryItems(cartItems , inventoryItems.getInventoryItemList());
+        Optional<String> productStock = compareInventoryItems(cartItems , inventoryItems.getInventoryItemList());
 
-        if(!check){
-            // throw new Exception ProductOutOfStockException("message").
-            return null;
+        if(productStock.isPresent()){
+            throw new ProductOutOfStockException("Product " + productStock.get() + " is out of stock");
         }
 
-//        for(CartItemDto items : cartItems){
-//
-//            if(!inventoryServiceClient.getItemsAvailability(items)){
-//                // throw Exception !ProductNotAvailableException("message").
-//                return null;
-//            }
-//
-//        }
 
 
 
+        /*Step 4 -> Get all the products prices from Pricing Service for their corresponding productId */
 
 
-        /*Step 4 -> Get all the products prices from Pricing Service from their corresponding productId */
+
 
         /*Step 5 ->We have to create this no external service required , Work is -: Generate Invoice by calculating
-        * the price for each products accordance to their quantity and the Total Amount to be paid by adding all
-        * the products prices  */
+         * the price for each products accordance to their quantity and the Total Amount to be paid by adding all
+         * the products prices  */ // do not do the step 5 here , create a new service.
 
         /*Step 6 -> Provide the Invoice and Total Amount to Payment Service and awaits for response SUCCESS/FAILURE  */
 
@@ -109,27 +104,29 @@ public class OrderService {
     }
 
 
-    public Boolean compareInventoryItems(List<CartItemDto> cartList , List<InventoryItemDto> inventoryList){
+    public Optional<String> compareInventoryItems(List<CartItemDto> cartList , List<InventoryItemDto> inventoryList){
 
         // here we are considering that both the list is of same size because the inventory team will only return
         // those products that are in cart.*/
+
+        if(inventoryList.size() < cartList.size()){
+            return Optional.of("some items are missing in inventory");
+        }
+
+
         for(int i=0;i<cartList.size();i++){
 
             int cartQuantity = cartList.get(i).getQuantity();
-            int invetoryQuantity = inventoryList.get(i).getQuantity();
+            int inventoryQuantity = inventoryList.get(i).getQuantity();
 
-            if(invetoryQuantity < cartQuantity) {
-                // here think how we can return that product whose quantity is less than the required quantity
-                return false;
+            if(inventoryQuantity < cartQuantity) {
+                // here think how we can return that product whose quantity is less than the required quantity -> handled.
+                return Optional.of(cartList.get(i).productId.toString());
             }
 
         }
 
-        return true;
+        return Optional.empty();
     }
-
-
-
-
 
 }
