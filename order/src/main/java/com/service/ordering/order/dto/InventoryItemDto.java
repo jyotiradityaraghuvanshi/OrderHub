@@ -1,14 +1,15 @@
 package com.service.ordering.order.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartItemDto {
+@Builder
+public class InventoryItemDto {
 
     public Integer productId;
 
@@ -18,7 +19,15 @@ public class CartItemDto {
         return productId;
     }
 
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
     public Integer getQuantity() {
         return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }

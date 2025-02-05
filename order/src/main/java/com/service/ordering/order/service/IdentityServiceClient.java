@@ -20,13 +20,13 @@ public class IdentityServiceClient {
         this.restTemplate = templateBuilder.build();
     }
 
-    public Boolean checkUserValidation(Integer userId){
+    public IdentityResponseDto checkUserValidation(Integer userId){
 
         String url = identityClientUrl + "/identity/" + userId;
 
         ResponseEntity<IdentityResponseDto> response = restTemplate.getForEntity(url , IdentityResponseDto.class);
 
-        return response.getBody().getUserIsValid();
+        return response.getBody();
     }
 
 }

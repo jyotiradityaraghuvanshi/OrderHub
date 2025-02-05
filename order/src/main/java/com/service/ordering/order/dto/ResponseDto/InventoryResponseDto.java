@@ -1,20 +1,27 @@
 package com.service.ordering.order.dto.ResponseDto;
 
 
+import com.service.ordering.order.dto.InventoryItemDto;
 import jakarta.persistence.criteria.CriteriaBuilder;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.List;
 
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class InventoryResponseDto {
 
-    Integer productId;
+    public List<InventoryItemDto> inventoryItemList;
 
-    Integer quantity;
+    public List<InventoryItemDto> getInventoryItemList() {
+        return inventoryItemList;
+    }
 
-    Boolean isAvail;
-
+    public void setInventoryItemList(List<InventoryItemDto> inventoryItemList) {
+        this.inventoryItemList = inventoryItemList;
+    }
 }

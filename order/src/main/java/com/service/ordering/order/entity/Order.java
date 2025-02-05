@@ -3,13 +3,14 @@ package com.service.ordering.order.entity;
 
 import com.service.ordering.order.Enum.Status;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "order")
 public class Order {
@@ -28,5 +29,35 @@ public class Order {
     private Status orderStatus = Status.CREATED;
 
 
+    public Integer getOrderId() {
+        return orderId;
+    }
 
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Integer totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public Status getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(Status orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 }

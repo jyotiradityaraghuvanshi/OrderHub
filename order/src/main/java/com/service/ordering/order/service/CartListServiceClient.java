@@ -3,7 +3,6 @@ package com.service.ordering.order.service;
 
 import com.service.ordering.order.dto.CartItemDto;
 import com.service.ordering.order.dto.ResponseDto.WishListResponseDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @Service
-public class WishListServiceClient {
+public class CartListServiceClient {
 
     private final RestTemplate restTemplate;
 
@@ -21,7 +20,7 @@ public class WishListServiceClient {
     private String wishListServiceUrl; // Read URL from properties file
 
     //Constructor Injection
-    public WishListServiceClient(RestTemplateBuilder restTemplateBuilder) {
+    public CartListServiceClient(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
 

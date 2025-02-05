@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @Service
 public class InventoryServiceClient {
 
@@ -24,13 +26,15 @@ public class InventoryServiceClient {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public Boolean checkAvailability(CartItemDto cartItemDto){
+    public InventoryResponseDto getItemsAvailability(List<CartItemDto> cartItemDto){
 
-        String url = inventoryClientUrl + "/inventory/" + cartItemDto.getProductId() + "/" +  cartItemDto.getQuantity();
+        // here: think how are we going to give the list of Items received from Cart to Inventory, because we cannot
+        // pass the list directly in the URL.*/
+        String url = inventoryClientUrl + "/inventory/" ;
 
         ResponseEntity<InventoryResponseDto> response = restTemplate.getForEntity(url , InventoryResponseDto.class);
 
-        return response.getBody().getIsAvail();
+        return response.getBody();
     }
 
 
