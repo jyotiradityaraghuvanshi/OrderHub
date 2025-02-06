@@ -1,9 +1,8 @@
 package com.service.ordering.order.service;
 
 
-import com.service.ordering.order.dto.CartItemDto;
+import com.service.ordering.order.dto.CartItem;
 import com.service.ordering.order.dto.ResponseDto.InventoryResponseDto;
-import com.service.ordering.order.dto.ResponseDto.WishListResponseDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ public class InventoryServiceClient {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public InventoryResponseDto getItemsAvailability(List<CartItemDto> cartItemDto){
+    public InventoryResponseDto getItemsAvailability(List<CartItem> cartItemDto){
 
         // here: think how are we going to give the list of Items received from Cart to Inventory, because we cannot
         // pass the list directly in the URL.*/

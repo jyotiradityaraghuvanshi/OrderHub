@@ -1,7 +1,7 @@
 package com.service.ordering.order.service;
 
 
-import com.service.ordering.order.dto.CartItemDto;
+import com.service.ordering.order.dto.CartItem;
 import com.service.ordering.order.dto.InventoryItemDto;
 import com.service.ordering.order.dto.RequestDto.OrderRequestDto;
 import com.service.ordering.order.dto.ResponseDto.IdentityResponseDto;
@@ -50,7 +50,7 @@ public class OrderService {
         * the cartId and catch the List<Items> itemsList which contains productId , Quantity */
 
         // we'll use the try catch block here and in every other calls too.
-        List<CartItemDto> cartItems = cartListServiceClient.fetchCartItems(orderRequestDto.getCartId());
+        List<CartItem> cartItems = cartListServiceClient.fetchCartItems(orderRequestDto.getCartId());
 
         if(cartItems.isEmpty()){
             // throw new Exception Empty_Cart_Exception("message");
@@ -102,6 +102,8 @@ public class OrderService {
 
         /* Step 7-> Order successfully created now create(save) the order in the database */
 
+        // SAVE product details in OrderItem table (KUNDAN)
+
         /*Step 8-> Notify services like: Inventory , User , Delivery, WishList ,etc.
          about the Order being successfully created. */
 
@@ -109,7 +111,7 @@ public class OrderService {
     }
 
 
-    public Boolean compareInventoryItems(List<CartItemDto> cartList , List<InventoryItemDto> inventoryList){
+    public Boolean compareInventoryItems(List<CartItem> cartList , List<InventoryItemDto> inventoryList){
 
         // here we are considering that both the list is of same size because the inventory team will only return
         // those products that are in cart.*/

@@ -31,3 +31,5 @@ public class InventoryItemDto {
         this.quantity = quantity;
     }
 }
+
+// this should be inside ResponseDto folder

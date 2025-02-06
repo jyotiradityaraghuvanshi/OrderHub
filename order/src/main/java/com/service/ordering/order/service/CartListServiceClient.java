@@ -1,8 +1,8 @@
 package com.service.ordering.order.service;
 
 
-import com.service.ordering.order.dto.CartItemDto;
-import com.service.ordering.order.dto.ResponseDto.WishListResponseDto;
+import com.service.ordering.order.dto.CartItem;
+import com.service.ordering.order.dto.ResponseDto.CartResponseDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +24,11 @@ public class CartListServiceClient {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public List<CartItemDto> fetchCartItems(Integer cartId){
+    public List<CartItem> fetchCartItems(Integer cartId){
 
         String url = wishListServiceUrl + "/wishlist/" + cartId;
 
-        ResponseEntity<WishListResponseDto> response = restTemplate.getForEntity(url , WishListResponseDto.class);
+        ResponseEntity<CartResponseDto> response = restTemplate.getForEntity(url , CartResponseDto.class);
 
         return response.getBody().getCartItemDtoList();
     }

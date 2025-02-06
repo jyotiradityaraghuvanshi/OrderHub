@@ -11,6 +11,7 @@ import lombok.*;
 @Builder
 public class IdentityResponseDto {
 
+    // this is useless because we are calling identity service using userId and also asking to userId in response
     public Integer userId;
 
     public String userName;
