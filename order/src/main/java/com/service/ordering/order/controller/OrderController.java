@@ -32,6 +32,7 @@ public class OrderController {
     }
 
 
+    @DeleteMapping("/cancel")
     public ResponseEntity<OrderResponseDto> cancelOrder(@RequestParam Integer orderId){
         return new ResponseEntity<>(orderService.cancelOrder(orderId) , HttpStatus.ACCEPTED);
     }
