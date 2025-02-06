@@ -1,17 +1,34 @@
 package com.service.ordering.order.dto.RequestDto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import lombok.*;
 
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class OrderRequestDto {
 
-    Integer userId;
+    public Integer userId;
 
-    Integer cartId;
+    public Integer cartId;
 
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public Integer getCartId() {
+        return cartId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public void setCartId(Integer cartId) {
+        this.cartId = cartId;
+    }
 }
