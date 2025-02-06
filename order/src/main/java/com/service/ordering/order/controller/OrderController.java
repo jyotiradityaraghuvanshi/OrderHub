@@ -26,6 +26,15 @@ public class OrderController {
     }
 
 
+    @GetMapping("/view")
+    public ResponseEntity<OrderResponseDto> viewOrder(@RequestParam Integer orderId){
+        return new ResponseEntity<>(orderService.viewOrderDetails(orderId) , HttpStatus.OK);
+    }
+
+
+    public ResponseEntity<OrderResponseDto> cancelOrder(@RequestParam Integer orderId){
+        return new ResponseEntity<>(orderService.cancelOrder(orderId) , HttpStatus.ACCEPTED);
+    }
 
 
 }

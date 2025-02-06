@@ -45,6 +45,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
+    @ExceptionHandler(PaymentFailureException.class)
+    public ResponseEntity<String> handlePaymentFailureException(PaymentFailureException e){
+        return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(e.getMessage());
+    }
+
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<String> handleOrderNotFoundException(OrderNotFoundException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+
     // add more exception if needed
 
 }
