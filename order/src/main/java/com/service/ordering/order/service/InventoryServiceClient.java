@@ -21,18 +21,25 @@ public class InventoryServiceClient {
     private String inventoryClientUrl;
 
 
+    @Value("${test:false}")
+    private boolean test;
+
+
     public InventoryServiceClient(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
 
     public InventoryResponseDto getItemsAvailability(List<CartItemDto> cartItemDto){
 
-        // here: think how are we going to give the list of Items received from Cart to Inventory, because we cannot
-        // pass the list directly in the URL.*/
+        if (test) {
+            InventoryResponseDto dummyResponse = new InventoryResponseDto();
+
+            return dummyResponse;
+        }
+
         String url = inventoryClientUrl + "/inventory/check-stock" ;
 
-        // handled the issue of sending the list of cartItems to Inventory
-        ResponseEntity<InventoryResponseDto> response = restTemplate.postForEntity(url , cartItemDto , InventoryResponseDto.class);
+        ResponseEntity<InventoryResponseDto> response = restTemplate.postForEntity(url, cartItemDto, InventoryResponseDto.class);
 
         // test will be written by adarsh shekhar
         return response.getBody();
