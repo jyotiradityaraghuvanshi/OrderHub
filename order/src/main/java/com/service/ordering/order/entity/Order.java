@@ -5,6 +5,9 @@ import com.service.ordering.order.Enum.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashMap;
+import java.util.List;
+
 @Data
 @Getter
 @Setter
@@ -27,6 +30,12 @@ public class Order {
 
     @Column(name = "order_status")
     private Status orderStatus = Status.CREATED;
+
+    @Column
+    private List<CartItem> cartItemsList;
+
+    @Column(name = "price_map")
+    private HashMap<Integer , Integer> priceMap;
 
 
     public Integer getOrderId() {

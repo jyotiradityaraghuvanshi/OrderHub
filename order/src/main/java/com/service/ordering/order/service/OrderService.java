@@ -2,6 +2,7 @@ package com.service.ordering.order.service;
 
 
 import com.service.ordering.order.Enum.Status;
+import com.service.ordering.order.Utils.OrderServiceUtils;
 import com.service.ordering.order.dto.CartItemDto;
 import com.service.ordering.order.dto.InventoryItemDto;
 import com.service.ordering.order.dto.PriceItemDto;
@@ -32,7 +33,7 @@ public class OrderService {
     private OrderRepo orderRepo;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private static ModelMapper modelMapper;
 
     @Autowired
     private CartListServiceClient cartListServiceClient;
@@ -76,19 +77,21 @@ public class OrderService {
         }
 
 
+        // extracting the product List from cart items list.
+        List<Integer> productIdsList = OrderServiceUtils.getProductIdsList(cartItems);
 
         /* Step 3-> Check the Product availability from Inventory Service by providing ProductId and product
          * Quantity.  */
 
         // we are not passing the single-single products, this time we are passing the whole list of products to Inventory.
-        InventoryResponseDto inventoryItems = inventoryServiceClient.getItemsAvailability(cartItems);
+        InventoryResponseDto inventoryItems = inventoryServiceClient.getItemsAvailability(productIdsList);
 
         if(inventoryItems.getInventoryItemList().isEmpty()){
             throw new InventoryServiceException("Inventory Service Return Empty Stock");
         }
 
         // we are checking whether the inventory items list has enough stock for fulfilling the order or not
-        Optional<String> productStock = compareInventoryItems(cartItems , inventoryItems.getInventoryItemList());
+        Optional<String> productStock = OrderServiceUtils.compareInventoryItems(cartItems , inventoryItems.getInventoryItemList());
 
         if(productStock.isPresent()){
             throw new ProductOutOfStockException("Product " + productStock.get() + " is out of stock");
@@ -98,34 +101,16 @@ public class OrderService {
 
 
         /*Step 4 -> Get all the products prices from Pricing Service for their corresponding productId */
-        // extracting the product List from cart items list.
-        List<Integer> productList = cartItems.stream()
-                                    .map(CartItemDto :: getProductId)
-                                    .toList();
+
 
         // getting the priceList from Pricing team.
-        PricingResponseDto priceList = pricingServiceClient.getPricingList(productList);
+        PricingResponseDto priceList = pricingServiceClient.getPricingList(productIdsList);
+        if (priceList.getPriceList().isEmpty()){
+            throw new PriceNotAvailableException("Currently Prices are not available.");
+        }
 
         // Now I will map the productId with their corresponding prices to know which price is of which product.
-        HashMap<Integer , Integer> priceMap = new HashMap<>();
-
-        for(PriceItemDto items : priceList.getPriceList()){
-            priceMap.put(items.getProductId() , items.getPrice());
-        }
-
-        int totalPrice = 0; // calculating the Total Price to pay.
-        for(CartItemDto items : cartItems){
-
-            int productId = items.getProductId();
-            int quantity = items.getQuantity();
-
-            if(!priceMap.containsKey(productId)){
-                throw new ProductOutOfStockException("Product with productId :" + productId + " is Not available");
-            }
-
-            totalPrice += priceMap.get(productId) * quantity;
-
-        }
+        int totalPrice = OrderServiceUtils.getTotalPrice(priceList, cartItems);
 
 
 
@@ -144,18 +129,21 @@ public class OrderService {
             throw new PaymentFailureException("PAYMENT FAILED!!");
         }
 
+        // Call Inventory team to reduce some stocks.
+        InventoryResponseDto inventoryResponseDto = inventoryServiceClient.performInventoryOperation(cartItems);
 
-        /* Step 7-> Order successfully created now create(save) the order in the database */
-        Order order = new Order();
-        order.setUserId(orderRequestDto.getUserId());
-        order.setTotalAmount(totalPrice);
-        order.setOrderStatus(Status.CREATED);
+
+
+
+        /* Step 7-> successfully create the order now and save the order in the database */
+
+        Order order = OrderServiceUtils.createOrder(orderRequestDto , totalPrice);
 
         orderRepo.save(order);
 
-        // Call Invoice Service here by sending the Order.
+        // Call Invoice Service here by sending the OrderId.
 
-        OrderResponseDto orderResponseDto = modelMapper.map(order , OrderResponseDto.class);
+        OrderResponseDto orderResponseDto = convertEntityToDto(order);
 
         /*Step 8-> Notify services like: Inventory , User , Delivery, WishList ,etc.
          about the Order being successfully created. */
@@ -164,42 +152,20 @@ public class OrderService {
     }
 
 
-    public Optional<String> compareInventoryItems(List<CartItemDto> cartList , List<InventoryItemDto> inventoryList){
 
-        // here we are considering that both the list is of same size because the inventory team will only return
-        // those products that are in cart.*/
-
-        if(inventoryList.size() < cartList.size()){
-            return Optional.of("some items are missing in inventory");
-        }
-
-
-        for(int i=0;i<cartList.size();i++){
-
-            int cartQuantity = cartList.get(i).getQuantity();
-            int inventoryQuantity = inventoryList.get(i).getQuantity();
-
-            if(inventoryQuantity < cartQuantity) {
-                // here think how we can return that product whose quantity is less than the required quantity -> handled.
-                return Optional.of(cartList.get(i).productId.toString());
-            }
-
-        }
-
-        return Optional.empty();
-    }
-
-    public OrderResponseDto viewOrderDetails(Integer orderId) {
-        boolean check = orderRepo.existsById(orderId);
-        if(!check){
-            throw new OrderNotFoundException("Order with the orderId :" + orderId + " does not exist");
-        }
+    public OrderResponseDto getOrderDetails(Integer orderId) {
 
         Optional<Order> order = orderRepo.findByOrderId(orderId);
 
-        return modelMapper.map(order.get() , OrderResponseDto.class);
+        if(order.isEmpty()){
+            throw new OrderNotFoundException("Order with the orderId :" + orderId + " does not exist");
+        }
+
+        return convertEntityToDto(order.get());
 
     }
+
+
 
     public OrderResponseDto cancelOrder(Integer orderId) {
 
@@ -214,7 +180,17 @@ public class OrderService {
 
         // calling Inventory Team for order being cancelled.
 
-        return modelMapper.map(order , OrderResponseDto.class);
+        return convertEntityToDto(order);
 
     }
+
+
+    private static OrderResponseDto convertEntityToDto(Order order){
+        return modelMapper.map(order , OrderResponseDto.class);
+    }
+
+    private static Order convertDtoToEntity(OrderRequestDto orderRequestDto){
+        return modelMapper.map(orderRequestDto , Order.class);
+    }
+
 }

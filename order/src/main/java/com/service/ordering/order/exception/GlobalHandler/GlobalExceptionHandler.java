@@ -57,6 +57,12 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(PriceNotAvailableException.class)
+    public ResponseEntity<String> handlePriceNotAvailableException(PriceNotAvailableException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+
     // add more exception if needed
 
 }
