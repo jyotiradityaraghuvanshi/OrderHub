@@ -10,6 +10,7 @@ import com.service.ordering.order.exception.OrderNotFoundException;
 import com.service.ordering.order.repository.InvoiceRepository;
 import com.service.ordering.order.repository.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,8 +24,31 @@ public class InvoiceService {
     @Autowired
     private OrderRepo orderRepository;
 
+    @Value("${test:false}")
+    private boolean test;
+
 
     public InvoiceResponseDto generateInvoice(InvoiceRequestDto invoiceRequestDto){
+
+        if (test) {
+            // In test mode, return a dummy InvoiceResponseDto with sample data.
+            InvoiceResponseDto dummyResponse = new InvoiceResponseDto();
+            dummyResponse.setInvoiceId(1);
+            dummyResponse.setUserId(100);
+            dummyResponse.setUserMail("dummy@ecommerce.com");
+            dummyResponse.setTotalAmount(999);
+
+            List<InvoiceItemDto> dummyItems = new ArrayList<>();
+            InvoiceItemDto dummyItem = new InvoiceItemDto();
+            dummyItem.setProductId(1);
+            dummyItem.setQuantity(2);
+            dummyItem.setPrice(100);      // For example, 2 items at 50 each would be 100.
+            dummyItem.setMerchantId(10);
+            dummyItems.add(dummyItem);
+
+            dummyResponse.setItems(dummyItems);
+            return dummyResponse;
+        }
         // 1. Fetch order details using orderID
         Integer orderId = invoiceRequestDto.getOrderId();
 
