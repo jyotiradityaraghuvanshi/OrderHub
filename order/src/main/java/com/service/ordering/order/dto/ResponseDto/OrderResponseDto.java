@@ -2,19 +2,41 @@ package com.service.ordering.order.dto.ResponseDto;
 
 
 import com.service.ordering.order.Enum.Status;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class OrderResponseDto {
 
-    Integer orderId;
+    public Integer orderId;
 
-    Status orderStatus;
+    public Status orderStatus;
 
-    Integer totalAmount;
+    public Integer totalAmount;
 
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
+
+    public Status getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(Status orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public Integer getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Integer totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 }
