@@ -12,10 +12,11 @@ import java.util.List;
 @Builder
 public class InvoiceResponseDto {
     private Integer userId;
-    private String userEmail;
+    private String userMail;
     private Integer totalAmount;
-    //    private Integer orderId;
+    private Integer invoiceId;
     private List<InvoiceItemDto> items;
+    //    private Integer orderId;
 
     // Getters and Setters
 }

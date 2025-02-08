@@ -16,11 +16,11 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer invoiceId;
 
-    @OneToOne
-    @JoinColumn(name = "order_id") // Foreign key to Order entity
-    private Order order;
-
     private LocalDateTime generatedAt;
+
+    @OneToOne
+    @JoinColumn(name = "order_id") // Foreign key in the Invoice Table
+    private Order order;
 
     // Getters and Setters
 }
