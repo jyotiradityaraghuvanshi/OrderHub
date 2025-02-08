@@ -1,12 +1,10 @@
 package com.service.ordering.order.entity;
 
-
 import com.service.ordering.order.Enum.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 
 @Data

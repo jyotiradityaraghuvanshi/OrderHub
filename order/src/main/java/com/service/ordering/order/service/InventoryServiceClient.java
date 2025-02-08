@@ -3,6 +3,7 @@ package com.service.ordering.order.service;
 
 import com.service.ordering.order.dto.CartItemDto;
 import com.service.ordering.order.dto.InventoryMerchantDto;
+import com.service.ordering.order.dto.RequestDto.InventoryUpdateRequestDto;
 import com.service.ordering.order.dto.ResponseDto.InventoryResponseDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -45,6 +46,16 @@ public class InventoryServiceClient {
         String url = inventoryClientUrl + "/inventory/operation";
 
         ResponseEntity<InventoryResponseDto> response = restTemplate.postForEntity(url , cartItems , InventoryResponseDto.class);
+
+        return response.getBody();
+    }
+
+
+    public Boolean restoreInventoryStock(List<InventoryUpdateRequestDto> restoreItemsList){
+
+        String url = inventoryClientUrl + "/inventory/restore";
+
+        ResponseEntity<Boolean> response = restTemplate.postForEntity(url , restoreItemsList , Boolean.class);
 
         return response.getBody();
     }

@@ -10,6 +10,33 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InventoryUpdateRequestDto {
 
+    public Integer productId;
 
+    public Integer quantity;
 
+    public Integer merchantId;
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Integer getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(Integer merchantId) {
+        this.merchantId = merchantId;
+    }
 }
