@@ -5,6 +5,7 @@ import com.service.ordering.order.Enum.Status;
 import com.service.ordering.order.Utils.OrderServiceUtils;
 import com.service.ordering.order.dto.CartItemDto;
 import com.service.ordering.order.dto.InventoryItemDto;
+import com.service.ordering.order.dto.InventoryMerchantDto;
 import com.service.ordering.order.dto.PriceItemDto;
 import com.service.ordering.order.dto.RequestDto.OrderRequestDto;
 import com.service.ordering.order.dto.ResponseDto.IdentityResponseDto;
@@ -37,7 +38,6 @@ public class OrderService {
 
     @Autowired
     private CartListServiceClient cartListServiceClient;
-
 
     @Autowired
     private InventoryServiceClient inventoryServiceClient;
@@ -84,7 +84,7 @@ public class OrderService {
          * Quantity.  */
 
         // we are not passing the single-single products, this time we are passing the whole list of products to Inventory.
-        InventoryResponseDto inventoryItems = inventoryServiceClient.getItemsAvailability(productIdsList);
+        InventoryResponseDto inventoryItems = inventoryServiceClient.getItemsAvailability(productIdsList , orderRequestDto.getPinCode());
 
         if(inventoryItems.getInventoryItemList().isEmpty()){
             throw new InventoryServiceException("Inventory Service Return Empty Stock");
@@ -132,12 +132,17 @@ public class OrderService {
         // Call Inventory team to reduce some stocks.
         InventoryResponseDto inventoryResponseDto = inventoryServiceClient.performInventoryOperation(cartItems);
 
+        List<InventoryMerchantDto> productMerchantList = inventoryResponseDto.getMerchantList();
+        if(productMerchantList.isEmpty()){
+            throw new InventoryServiceException("Merchants cannot be assigned for your Order");
+        }
 
-
+        // extract merchant List
+        List<Integer> merchantIdsList = OrderServiceUtils.getMerchantIdsList(productMerchantList);
 
         /* Step 7-> successfully create the order now and save the order in the database */
 
-        Order order = OrderServiceUtils.createOrder(orderRequestDto , totalPrice);
+        Order order = OrderServiceUtils.createOrder(orderRequestDto , totalPrice , merchantIdsList , user.getEmail());
 
         orderRepo.save(order);
 
@@ -194,3 +199,4 @@ public class OrderService {
     }
 
 }
+

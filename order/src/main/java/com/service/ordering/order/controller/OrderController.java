@@ -26,7 +26,7 @@ public class OrderController {
     }
 
 
-    @GetMapping("/view")
+    @GetMapping("/get")
     public ResponseEntity<OrderResponseDto> getOrder(@RequestParam Integer orderId){
         return new ResponseEntity<>(orderService.getOrderDetails(orderId) , HttpStatus.OK);
     }

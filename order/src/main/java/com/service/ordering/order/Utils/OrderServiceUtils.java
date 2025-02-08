@@ -3,6 +3,7 @@ package com.service.ordering.order.Utils;
 import com.service.ordering.order.Enum.Status;
 import com.service.ordering.order.dto.CartItemDto;
 import com.service.ordering.order.dto.InventoryItemDto;
+import com.service.ordering.order.dto.InventoryMerchantDto;
 import com.service.ordering.order.dto.PriceItemDto;
 import com.service.ordering.order.dto.RequestDto.OrderRequestDto;
 import com.service.ordering.order.dto.ResponseDto.OrderResponseDto;
@@ -10,17 +11,22 @@ import com.service.ordering.order.dto.ResponseDto.PricingResponseDto;
 import com.service.ordering.order.entity.Order;
 import com.service.ordering.order.exception.ProductOutOfStockException;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 public class OrderServiceUtils {
 
-    public static Order createOrder(OrderRequestDto orderRequestDto , Integer totalPrice){
+    public static Order createOrder(OrderRequestDto orderRequestDto , Integer totalPrice , List<Integer> merchantId , String email){
         Order order = new Order();
         order.setUserId(orderRequestDto.getUserId());
+        order.setUserMail(email);
+        order.setPinCode(orderRequestDto.getPinCode());
         order.setTotalAmount(totalPrice);
         order.setOrderStatus(Status.CREATED);
+        order.setCreatedAt(LocalDateTime.now());
+        order.setMerchantIds(merchantId);
 
         return order;
     }
@@ -82,4 +88,11 @@ public class OrderServiceUtils {
         return totalPrice;
     }
 
+    public static List<Integer> getMerchantIdsList(List<InventoryMerchantDto> productMerchantList) {
+        List<Integer> merchantList = productMerchantList.stream()
+                                     .map(InventoryMerchantDto::getMerchantId)
+                                     .toList();
+
+        return merchantList;
+    }
 }

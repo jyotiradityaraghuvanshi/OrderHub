@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import lombok.*;
 
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -15,6 +13,8 @@ public class OrderRequestDto {
     public Integer userId;
 
     public Integer cartId;
+
+    public String pinCode;
 
     public Integer getUserId() {
         return userId;
@@ -30,5 +30,13 @@ public class OrderRequestDto {
 
     public void setCartId(Integer cartId) {
         this.cartId = cartId;
+    }
+
+    public String getPinCode() {
+        return pinCode;
+    }
+
+    public void setPinCode(String pinCode) {
+        this.pinCode = pinCode;
     }
 }

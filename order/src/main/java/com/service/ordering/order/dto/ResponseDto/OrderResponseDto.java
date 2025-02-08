@@ -5,8 +5,6 @@ import com.service.ordering.order.Enum.Status;
 import lombok.*;
 
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

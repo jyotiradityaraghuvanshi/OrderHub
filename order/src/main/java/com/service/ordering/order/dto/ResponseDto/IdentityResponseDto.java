@@ -4,8 +4,6 @@ package com.service.ordering.order.dto.ResponseDto;
 import lombok.*;
 
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

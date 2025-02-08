@@ -26,11 +26,11 @@ public class InventoryServiceClient {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public InventoryResponseDto getItemsAvailability(List<Integer> productIdsList){
+    public InventoryResponseDto getItemsAvailability(List<Integer> productIdsList , String pinCode){
 
         // here: think how are we going to give the list of Items received from Cart to Inventory, because we cannot
         // pass the list directly in the URL.*/
-        String url = inventoryClientUrl + "/inventory/check-stock" ;
+        String url = inventoryClientUrl + "/inventory/check-stock" + pinCode;
 
         // handled the issue of sending the list of cartItems to Inventory
         ResponseEntity<InventoryResponseDto> response = restTemplate.postForEntity(url , productIdsList , InventoryResponseDto.class);
