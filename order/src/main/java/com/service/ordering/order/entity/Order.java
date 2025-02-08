@@ -109,4 +109,12 @@ public class Order {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    public List<OrderItem> getOrderItemsList() {
+        return orderItemsList;
+    }
+
+    public void setOrderItemsList(List<OrderItem> orderItemsList) {
+        this.orderItemsList = orderItemsList;
+    }
 }
