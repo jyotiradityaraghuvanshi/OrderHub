@@ -1,5 +1,6 @@
 package com.service.ordering.order.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class Invoice {
 
     @OneToOne
     @JoinColumn(name = "order_id") // Foreign key in the Invoice Table
+    @JsonProperty
     private Order order;
 
     // Getters and Setters

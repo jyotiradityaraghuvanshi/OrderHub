@@ -3,6 +3,7 @@ package com.service.ordering.order.controller;
 import com.service.ordering.order.dto.RequestDto.InvoiceRequestDto;
 import com.service.ordering.order.dto.ResponseDto.InvoiceResponseDto;
 import com.service.ordering.order.service.InvoiceService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,6 @@ public class InvoiceController {
     public ResponseEntity<InvoiceResponseDto> generateInvoice(@RequestBody InvoiceRequestDto invoiceRequestDto){
         InvoiceResponseDto invoiceResponseDto = invoiceService.generateInvoice(invoiceRequestDto);
 
-        return ResponseEntity.ok(invoiceResponseDto);
+        return new ResponseEntity<>(invoiceResponseDto, HttpStatus.OK);
     }
 }

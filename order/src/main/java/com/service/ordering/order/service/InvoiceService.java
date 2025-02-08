@@ -6,6 +6,7 @@ import com.service.ordering.order.dto.ResponseDto.InvoiceResponseDto;
 import com.service.ordering.order.entity.Invoice;
 import com.service.ordering.order.entity.Order;
 import com.service.ordering.order.entity.OrderItem;
+import com.service.ordering.order.exception.OrderNotFoundException;
 import com.service.ordering.order.repository.InvoiceRepository;
 import com.service.ordering.order.repository.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,11 @@ public class InvoiceService {
         // 1.1 if orderId does not exist throw global exception | orderId not found
         Optional<Order> optionalOrder = orderRepository.findByOrderId(orderId);
 
-        Order order = optionalOrder.orElseThrow( () -> new RuntimeException("Order not found with ID: " + orderId));
+        if(optionalOrder.isEmpty()){
+            throw new OrderNotFoundException("Order not found with ID: " + orderId);
+        }
+
+        Order order = optionalOrder.get();
 
         // 2. fetch details from order: userId userEmail priceMap totalAmount
         Integer userId = order.getUserId();
@@ -44,7 +49,7 @@ public class InvoiceService {
             InvoiceItemDto invoiceItem = new InvoiceItemDto();
             invoiceItem.setProductId(orderItem.getProductId());
             invoiceItem.setQuantity(orderItem.getQuantity());
-            invoiceItem.setPrice(orderItem.getPricePerItem());
+            invoiceItem.setPrice(orderItem.getPricePerItem()*orderItem.getQuantity());
             invoiceItem.setMerchantId(orderItem.getMerchantId());
         }
 
