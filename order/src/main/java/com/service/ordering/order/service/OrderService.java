@@ -7,6 +7,7 @@ import com.service.ordering.order.dto.CartItemDto;
 import com.service.ordering.order.dto.InventoryItemDto;
 import com.service.ordering.order.dto.InventoryMerchantDto;
 import com.service.ordering.order.dto.PriceItemDto;
+import com.service.ordering.order.dto.RequestDto.InventoryUpdateRequestDto;
 import com.service.ordering.order.dto.RequestDto.OrderRequestDto;
 import com.service.ordering.order.dto.ResponseDto.IdentityResponseDto;
 import com.service.ordering.order.dto.ResponseDto.InventoryResponseDto;
@@ -35,6 +36,9 @@ public class OrderService {
 
     @Autowired
     private static ModelMapper modelMapper;
+
+    @Autowired
+    private OrderItemService orderItemService;
 
     @Autowired
     private CartListServiceClient cartListServiceClient;
@@ -144,9 +148,9 @@ public class OrderService {
 
         Order order = OrderServiceUtils.createOrder(orderRequestDto , totalPrice , merchantIdsList , user.getEmail());
 
-        orderRepo.save(order);
+        orderItemService.saveOrderItem(cartItems , order , priceList , productMerchantList);
 
-        // Call Invoice Service here by sending the OrderId.
+        orderRepo.save(order);
 
         OrderResponseDto orderResponseDto = convertEntityToDto(order);
 
@@ -182,8 +186,18 @@ public class OrderService {
 
         Order order = orderOptional.get();
         order.setOrderStatus(Status.CANCELLED);
+        orderRepo.save(order);
 
         // calling Inventory Team for order being cancelled.
+        List<InventoryUpdateRequestDto> restoreItems = order.getOrderItemsList()
+                                                       .stream()
+                                                       .map(item ->
+                                                               new InventoryUpdateRequestDto(item.getProductId() , item.getQuantity(), item.getMerchantId()))
+                                                       .toList();
+        Boolean restoreOperation = inventoryServiceClient.restoreInventoryStock(restoreItems);
+        if(!restoreOperation){
+            throw new InventoryServiceException("Inventory stocks cannot be restored");
+        }
 
         return convertEntityToDto(order);
 
