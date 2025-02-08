@@ -41,6 +41,9 @@ public class Order {
     @Column(name = "merchant_id")
     private List<Integer> merchantIds;
 
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Invoice invoice;
+
 
     @OneToMany(mappedBy = "order" , cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     List<OrderItem> orderItemsList;
