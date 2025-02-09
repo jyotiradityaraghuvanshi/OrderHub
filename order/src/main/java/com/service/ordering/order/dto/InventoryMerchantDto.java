@@ -29,4 +29,6 @@ public class InventoryMerchantDto {
     public void setMerchantId(Integer merchantId) {
         this.merchantId = merchantId;
     }
+
+
 }

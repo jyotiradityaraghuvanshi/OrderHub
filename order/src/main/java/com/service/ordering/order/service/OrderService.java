@@ -20,6 +20,7 @@ import lombok.Builder;
 import lombok.NonNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -55,8 +56,20 @@ public class OrderService {
     @Autowired
     private PaymentServiceClient paymentServiceClient;
 
+    @Value("${test:false}")
+    private boolean test;
+
 
     public OrderResponseDto createOrdering(@NonNull OrderRequestDto orderRequestDto){
+
+        if (test) {
+            OrderResponseDto dummyResponse = new OrderResponseDto();
+            dummyResponse.setOrderId(1);
+            dummyResponse.setOrderStatus(Status.CREATED);
+            dummyResponse.setTotalAmount(100);
+            // Set additional dummy values as needed.
+            return dummyResponse;
+        }
 
         //Step 1-> First check user by the api with Identity team , whether the user is valid or not.
         /* get/UserValidation(orderRequestDto.getUserId()) , if the response is true then proceed further
@@ -177,6 +190,15 @@ public class OrderService {
 
 
     public OrderResponseDto cancelOrder(Integer orderId) {
+
+        if (test) {
+            // In test mode, simulate cancellation by returning a dummy cancelled order response.
+            Order dummyOrder = new Order();
+            dummyOrder.setOrderId(orderId);
+            dummyOrder.setOrderStatus(Status.CANCELLED);
+
+            return convertEntityToDto(dummyOrder);
+        }
 
         Optional<Order> orderOptional = orderRepo.findByOrderId(orderId);
 
