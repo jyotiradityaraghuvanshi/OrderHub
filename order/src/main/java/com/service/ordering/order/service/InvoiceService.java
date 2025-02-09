@@ -10,12 +10,14 @@ import com.service.ordering.order.exception.OrderNotFoundException;
 import com.service.ordering.order.repository.InvoiceRepository;
 import com.service.ordering.order.repository.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class InvoiceService {
     @Autowired
     private InvoiceRepository invoiceRepository;
@@ -56,7 +58,7 @@ public class InvoiceService {
         // 6. Create and save Invoice
         Invoice invoice = new Invoice();
         invoice.setGeneratedAt(LocalDateTime.now());
-        invoice.setOrder(order);
+//        invoice.setOrder(order);
 
         Invoice savedInvoice = invoiceRepository.save(invoice);
 
@@ -65,7 +67,7 @@ public class InvoiceService {
         responseDto.setUserId(userId);
         responseDto.setUserMail(userMail);
         responseDto.setTotalAmount(totalAmount);
-        responseDto.setInvoiceId(savedInvoice.getInvoiceId());
+//        responseDto.setInvoiceId(savedInvoice.getInvoiceId());
         responseDto.setItems(invoiceItems);
 
 

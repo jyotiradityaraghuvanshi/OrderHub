@@ -14,7 +14,7 @@ public class InvoiceResponseDto {
     private Integer userId;
     private String userMail;
     private Integer totalAmount;
-    private Integer invoiceId;
+//    private Integer invoiceId;
     private List<InvoiceItemDto> items;
     //    private Integer orderId;
 
