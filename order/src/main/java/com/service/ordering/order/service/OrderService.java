@@ -35,7 +35,7 @@ public class OrderService {
     private OrderRepo orderRepo;
 
     @Autowired
-    private static ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
     @Autowired
     private OrderItemService orderItemService;
@@ -98,7 +98,7 @@ public class OrderService {
         Optional<String> productStock = OrderServiceUtils.compareInventoryItems(cartItems , inventoryItems.getInventoryItemList());
 
         if(productStock.isPresent()){
-            throw new ProductOutOfStockException("Product " + productStock.get() + " is out of stock");
+            throw new ProductOutOfStockException("Product " + productStock.get() + " is out of stock from Inventory.");
         }
 
 
@@ -204,11 +204,11 @@ public class OrderService {
     }
 
 
-    private static OrderResponseDto convertEntityToDto(Order order){
+    private OrderResponseDto convertEntityToDto(Order order){
         return modelMapper.map(order , OrderResponseDto.class);
     }
 
-    private static Order convertDtoToEntity(OrderRequestDto orderRequestDto){
+    private Order convertDtoToEntity(OrderRequestDto orderRequestDto){
         return modelMapper.map(orderRequestDto , Order.class);
     }
 

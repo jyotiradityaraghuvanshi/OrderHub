@@ -14,11 +14,19 @@ public class PaymentServiceClient {
     @Value("${payment.service.url}")
     private String paymentUrl;
 
+    @Value("${test:false}")
+    private boolean test;
+
     public PaymentServiceClient(RestTemplateBuilder restTemplateBuilder){
         this.restTemplate = restTemplateBuilder.build();
     }
 
     public Boolean processPayment(Integer totalPrice){
+
+        if (test) {
+            // In test mode, simply return success without calling any external API.
+            return true;
+        }
         // just returning the payment as success.
         // write test here adarsh shekhar.
         return true;
