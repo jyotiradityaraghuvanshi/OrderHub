@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class InventoryUpdateRequestDto {
 
     public Integer productId;
@@ -17,11 +15,11 @@ public class InventoryUpdateRequestDto {
 
     public Integer merchantId;
 
-//    public InventoryUpdateRequestDto(Integer productId, Integer quantity, Integer merchantId) {
-//        this.productId = productId;
-//        this.quantity = quantity;
-//        this.merchantId = merchantId;
-//    }
+    public InventoryUpdateRequestDto(Integer productId, Integer quantity, Integer merchantId) {
+        this.productId = productId;
+        this.quantity = quantity;
+        this.merchantId = merchantId;
+    }
 
     public Integer getProductId() {
         return productId;
