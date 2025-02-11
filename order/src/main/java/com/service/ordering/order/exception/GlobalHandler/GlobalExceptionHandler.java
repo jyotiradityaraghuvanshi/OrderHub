@@ -62,6 +62,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
+    @ExceptionHandler(InvoiceAlreadyExistsException.class)
+    public ResponseEntity<String> handleInvoiceAlreadyExistsException(InvoiceAlreadyExistsException e){
+        return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(e.getMessage());
+    }
+
 
     // add more exception if needed
 

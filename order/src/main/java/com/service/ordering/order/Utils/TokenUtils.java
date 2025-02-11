@@ -8,7 +8,7 @@ public class TokenUtils {
 
     public static IdentityResponseDto decodeToken(String token){
 
-        Claims claims = Jwts.parserBuilder().build().parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parserBuilder().build().parseClaimsJwt(token).getBody();
 
         IdentityResponseDto identityResponseDto = new IdentityResponseDto();
 

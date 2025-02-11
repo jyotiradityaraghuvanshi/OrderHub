@@ -5,17 +5,15 @@ import lombok.*;
 import java.util.List;
 
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class InvoiceResponseDto {
-    private Integer userId;
-    private String userMail;
-    private Integer totalAmount;
+    public Integer userId;
+    public String userMail;
+    public Integer totalAmount;
     //private Integer invoiceId;
-    private List<InvoiceItemDto> items;
+    public List<InvoiceItemDto> items;
     //    private Integer orderId;
 
     // Getters and Setters

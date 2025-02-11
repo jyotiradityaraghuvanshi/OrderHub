@@ -28,7 +28,7 @@ public class IdentityServiceClient {
         if (test) {
             // In test mode, return a dummy token with test data.
 
-            return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwMSwiZW1haWwiOiJ0ZXN0QGVtYWlsLmNvbSIsInVzZXJOYW1lIjoiVGVzdCBVc2VyIiwibG9jYXRpb24iOiJVUyJ9._your_secret_here_";
+            return "eyJhbGciOiJub25lIn0.eyJ1c2VySWQiOjEwMSwiZW1haWwiOiJ0ZXN0QGVtYWlsLmNvbSIsInVzZXJOYW1lIjoiVGVzdCBVc2VyIiwibG9jYXRpb24iOiJVUyJ9.";
         }
 
         String url = identityClientUrl + "/user/get/" + userId;
