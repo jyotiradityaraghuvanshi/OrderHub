@@ -17,6 +17,16 @@ public class IdentityResponseDto {
 
     public String email;
 
+    public String phone;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public Integer getUserId() {
         return userId;
     }

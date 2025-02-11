@@ -3,6 +3,7 @@ package com.service.ordering.order.service;
 
 import com.service.ordering.order.Enum.Status;
 import com.service.ordering.order.Utils.OrderServiceUtils;
+import com.service.ordering.order.Utils.TokenUtils;
 import com.service.ordering.order.dto.CartItemDto;
 import com.service.ordering.order.dto.InventoryItemDto;
 import com.service.ordering.order.dto.InventoryMerchantDto;
@@ -62,10 +63,12 @@ public class OrderService {
         /* get/UserValidation(orderRequestDto.getUserId()) , if the response is true then proceed further
          * else return Exception -INVALIDUserException */
 
-        IdentityResponseDto user = identityServiceClient.checkUserValidation(orderRequestDto.getUserId());
+        String token = identityServiceClient.checkUserValidation(orderRequestDto.getUserId());
+        IdentityResponseDto user = TokenUtils.decodeToken(token);
         if(user.getEmail() == null){
             throw new InvalidUserException("User Id" + orderRequestDto.getUserId() + "Is Invalid");
         }
+//        user.setLocation(orderRequestDto.getPinCode());
 
 
 
