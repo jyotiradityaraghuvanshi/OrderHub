@@ -4,15 +4,10 @@ package com.service.ordering.order.service;
 import com.service.ordering.order.Enum.Status;
 import com.service.ordering.order.Utils.OrderServiceUtils;
 import com.service.ordering.order.dto.CartItemDto;
-import com.service.ordering.order.dto.InventoryItemDto;
 import com.service.ordering.order.dto.InventoryMerchantDto;
-import com.service.ordering.order.dto.PriceItemDto;
 import com.service.ordering.order.dto.RequestDto.InventoryUpdateRequestDto;
 import com.service.ordering.order.dto.RequestDto.OrderRequestDto;
-import com.service.ordering.order.dto.ResponseDto.IdentityResponseDto;
-import com.service.ordering.order.dto.ResponseDto.InventoryResponseDto;
-import com.service.ordering.order.dto.ResponseDto.OrderResponseDto;
-import com.service.ordering.order.dto.ResponseDto.PricingResponseDto;
+import com.service.ordering.order.dto.ResponseDto.*;
 import com.service.ordering.order.entity.Order;
 import com.service.ordering.order.exception.*;
 import com.service.ordering.order.repository.OrderRepo;
@@ -22,7 +17,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -210,6 +204,21 @@ public class OrderService {
 
     private Order convertDtoToEntity(OrderRequestDto orderRequestDto){
         return modelMapper.map(orderRequestDto , Order.class);
+    }
+
+    public List<OrderHistoryResponseDto> getOrderHistoryDetails(Integer orderId){
+        Optional<Order> optionalOrder = orderRepo.findById(orderId);
+        if (optionalOrder.isEmpty()){
+            throw new OrderNotFoundException("Order with OrderId :"+orderId+" does not exist");
+        }
+        Integer userId = optionalOrder.get().getUserId();
+        List<Order> orders = orderRepo.findByUserId(userId);
+        if (orders.isEmpty()){
+            throw new OrderNotFoundException("No Orders Found for UserID : "+userId);
+        }
+        return orders.stream()
+                .map(order -> modelMapper.map(order,OrderHistoryResponseDto.class))
+                .collect(Collectors.toList());
     }
 
 }
